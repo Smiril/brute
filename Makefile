@@ -1,6 +1,7 @@
-CC=gcc
+CC=clang
 PREFIX=/usr/local
 DOCDIR=${PREFIX}/share/brute
+
 all:
 	${CC} -lssl -lcrypto -pthread bruteforce.c -O2 -o brute
 
