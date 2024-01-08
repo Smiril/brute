@@ -38,12 +38,9 @@
 #include <unistd.h>
 #define MAX_LINE_LENGTH 4096
 #include <openssl/sha.h>
-char password[102+1] = {'\0','\0'}; //this contains the actual password
-char password_good[102] = {'\0', '\0'};  //this changed only once, when we found the good passord
-char finalcmd[4096] = {'\0', '\0'}; //this depending on arhive file type, it's a command to test file with password
-unsigned int curr_len = 1; //current password length
+char password[4096+1] = {'\0','\0'}; //this contains the actual password
+char password_good[4096] = {'\0', '\0'};  //this changed only once, when we found the good passord
 long counter = 0;    //this couning probed passwords
-char filename[255];    //the archive file name
 char hfile[255];    //the hashes file name
 char statname[259];    //status xml file name filename + ".xml"
 int finished = 0;
@@ -59,9 +56,8 @@ void sha256(const char *input, char *output) {
 }
 
 char *nextpass() {
-    #define BUFLEN 7379548732467144811
-    char *line = malloc(BUFLEN * sizeof(char));
-    char **Con  = malloc(BUFLEN * sizeof(char*));
+    char *line = malloc(MAX_LINE_LENGTH * sizeof(char));
+    char **Con  = malloc(MAX_LINE_LENGTH * sizeof(char*));
     int nCon = 0;
     FILE *file2;
     
