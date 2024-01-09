@@ -44,7 +44,7 @@ long counter = 0;    //this couning probed passwords
 char hfile[255];    //the hashes file name
 char statname[259];    //status xml file name filename + ".xml"
 int finished = 0;
-
+FILE *file2;
 
 void crack_start(unsigned int threads);
 
@@ -56,24 +56,17 @@ void sha256(const char *input, char *output) {
 }
 
 char *nextpass() {
-    char *line = malloc(MAX_LINE_LENGTH * sizeof(char));
-    char **Con  = malloc(MAX_LINE_LENGTH * sizeof(char*));
-    int nCon = 0;
-    FILE *file2;
+    char *line = malloc(MAX_LINE_LENGTH * sizeof(char*));
+    char *pwd = malloc(sizeof(char)*(PWD_LEN + 1));
     
     file2 = fopen("/usr/local/share/brute/rockyou.txt", "r");
     
     while (fgets(line, MAX_LINE_LENGTH, file2) != NULL) {
-        if (! feof(file2)) {
-            int len = strlen(line) + 1;
-            Con[nCon] = malloc(len * sizeof(char));
-            strcpy(Con[nCon], line);
-            nCon++;
-        }
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(pwd, line);
     }
-    fclose(file2);
 
-    return *Con[nCon];
+    return pwd;
 }
 
 void *status_thread() {
@@ -125,6 +118,7 @@ void *crack_thread() {
         }
 
         fclose(file1);
+        fclose(file2);
         
         counter++;
         
