@@ -102,13 +102,14 @@ void sha256(const char *input, char *output) {
 
 char *nextpass() {
     char line[MAX_LINE_LENGTH * sizeof(char*)];// = malloc(MAX_LINE_LENGTH * sizeof(char*));
-    file2 = fopen("/usr/local/share/rockyou.txt", "r");
+    
     
     while (fgets(line, MAX_LINE_LENGTH, file2) != NULL) {
         line[strcspn(line, "\n")] = '\0';
         strcpy(pwd, line);
     }
 
+    
     return pwd;
 }
 
@@ -129,12 +130,12 @@ void status_thread() {
         }
 }
 
-void crack_thread() {
+char *crack_thread() {
     char line1[MAX_LINE_LENGTH];
     char cur[SHA256_DIGEST_LENGTH];
     char lane2[SHA256_DIGEST_LENGTH];
     char hashed_password[SHA256_DIGEST_LENGTH * 2 + 1]; // Each byte of hash produces two characters in hex
-    
+    file2 = fopen("/usr/local/share/rockyou.txt", "r");
     while (1) {
         current = nextpass();
         file1 = fopen(hfile, "r");
@@ -152,20 +153,22 @@ void crack_thread() {
             if (strcmp(cur,line1)) {
                     strcpy(password_good, current);
                     finished = 1;
-                    printf("GOOD: password cracked: '%s'\n", password_good);
+                    return password_good;
                     break;
                 }
         }
         
         counter++;
         
-        if (finished == 1) {
+        if (finished != 0) {
             break;
         }
         
         free(current);
     }
-    //return 0;
+    fclose(file1);
+    fclose(file2);
+    return 0;
 }
 
 
@@ -177,13 +180,13 @@ void crack_start(unsigned int threads) {
         (void) pthread_create(&th[i], NULL, (void *(*)(void *))crack_thread, NULL);
     }
 
-    (void) pthread_create(&th[1], NULL, (void *(*)(void *))status_thread, NULL);
+    (void) pthread_create(&th[100], NULL, (void *(*)(void *))status_thread, NULL);
 
     for (i = 0; i < threads; i++) {
         (void) pthread_join(th[i], NULL);
     }
 
-    (void) pthread_join(th[1], NULL);
+    (void) pthread_join(th[100], NULL);
 }
 
 int init(int threadsx, char *mir) {
@@ -227,7 +230,7 @@ int main(int argc, char **argv) {
   if (argc < 1) {
         printf("USAGE: %s hashes.ext\n",argv[0]);
 	exit(1);
-    } else {
+    }
   //fir = argv[1];
   // Subdividing input data across GPUs
   // Get data sizes for each GPU
@@ -358,8 +361,5 @@ int main(int argc, char **argv) {
     checkCudaErrors(cudaFreeHost(plan[i].h_Data));
   }
 
-        fclose(file1);
-        fclose(file2);
-}
-  exit((diff < 1e-5) ? EXIT_SUCCESS : EXIT_FAILURE);
+  return EXIT_SUCCESS;
 }
