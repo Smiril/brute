@@ -68,7 +68,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Data configuration
 ////////////////////////////////////////////////////////////////////////////////
-int init(int threadsx, char *mir);
 char *fir;
 const int MAX_GPU_COUNT = 32;
 const int DATA_N = init(1,fir);
@@ -93,8 +92,6 @@ char hfile[255];    //the hashes file name
 char statname[259];    //status xml file name filename + ".xml"
 long counter = 0;    //this couning probed passwords
 int finished = 0;
-
-void crack_start(unsigned int threads);
 
 void sha256(const char *input, char *output) {
     SHA256_CTX sha256;
