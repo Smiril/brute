@@ -16,13 +16,27 @@ sudo make
 ```
 ## Usage
 ```shell
-$ ./brute-CUDA hashes.txt
+$ ./simpleMultiGPU hashes.txt
 ```
 
 ## Example
 
  **sha256**
 ```shell
-$ ./brute test.txt
-GOOD: password cracked: 'password'
+$ ./simpleMultiGPU test.txt
+Starting simpleMultiGPU
+CUDA-capable device count: 1
+Generating input data...
+
+GOOD: password cracked: '*7¡Vamos!'
+Computing with 1 GPUs...
+  GPU Processing time: 0.408000 (ms)
+
+Computing with Host CPU...
+
+Comparing GPU and Host CPU results...
+  GPU sum: 0.000000
+  CPU sum: 0.000000
+  Relative difference: -NAN 
+
 ```
