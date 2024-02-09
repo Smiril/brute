@@ -43,7 +43,7 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <unistd.h>
-#define MAX_LINE_LENGTH 4096
+#define MAX_LINE_LENGTH 40
 #include <openssl/sha.h>
 #include <assert.h>
 
@@ -63,13 +63,15 @@
 #define PWD_LEN 40
     FILE *file1;
     FILE *file2;
-    char pwd[sizeof(char)*(PWD_LEN + 1)];// = malloc(sizeof(char)*(PWD_LEN + 1));
+    char pwd[sizeof(char)*(PWD_LEN + 1)];
     
 ////////////////////////////////////////////////////////////////////////////////
 // Data configuration
 ////////////////////////////////////////////////////////////////////////////////
+int init(int threadsx, char *mir);
+char *fir;
 const int MAX_GPU_COUNT = 32;
-const int DATA_N = 1048576 * 32;
+const int DATA_N = init(1,fir);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Simple reduction kernel.
@@ -85,7 +87,6 @@ __global__ static void reduceKernel(float *d_Result, float *d_Input, int N) {
 
   d_Result[tid] = sum;
 }
-#define MAX_LINE_LENGTH 40
 char password_good[4096] = {'\0', '\0'};  //this changed only once, when we found the good passord
 char password[4096+1] = {'\0','\0'}; //this contains the actual password
 char hfile[255];    //the hashes file name
@@ -201,6 +202,7 @@ int init(int threadsx, char *mir) {
 // Program main
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char **argv) {
+  fir = argv[1];
   // Solver config
   TGPUplan plan[MAX_GPU_COUNT];
 
@@ -230,7 +232,7 @@ int main(int argc, char **argv) {
   // Subdividing input data across GPUs
   // Get data sizes for each GPU
   for (i = 0; i < GPU_N; i++) {
-    plan[i].dataN = init(1,argv[1]);
+    plan[i].dataN = DATA_N / GPU_N;
   }
 
   // Take into account "odd" data sizes
