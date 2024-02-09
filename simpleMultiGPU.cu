@@ -168,7 +168,7 @@ char *crack_thread() {
     }
     fclose(file1);
     fclose(file2);
-    return 0;
+    return password_good;
 }
 
 
@@ -201,7 +201,10 @@ int init(int threadsx, char *mir) {
 // Program main
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char **argv) {
-
+  if (argc < 2) {
+        printf("USAGE: %s hashes.ext\n",argv[0]);
+	exit(1);
+    }
   // Solver config
   TGPUplan plan[MAX_GPU_COUNT];
 
@@ -227,11 +230,8 @@ int main(int argc, char **argv) {
   printf("CUDA-capable device count: %i\n", GPU_N);
 
   printf("Generating input data...\n\n");
-  if (argc < 1) {
-        printf("USAGE: %s hashes.ext\n",argv[0]);
-	exit(1);
-    }
-  //fir = argv[1];
+
+
   // Subdividing input data across GPUs
   // Get data sizes for each GPU
   for (i = 0; i < GPU_N; i++) {
