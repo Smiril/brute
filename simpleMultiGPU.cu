@@ -89,7 +89,6 @@ __global__ static void reduceKernel(float *d_Result, float *d_Input, int N) {
 char password_good[40] = {'\0', '\0'};  //this changed only once, when we found the good passord
 char password[40+1] = {'\0','\0'}; //this contains the actual password
 char hfile[255];    //the hashes file name
-char statname[259];    //status xml file name filename + ".xml"
 long counter = 0;    //this couning probed passwords
 int finished = 0;
 
@@ -101,22 +100,20 @@ void sha256(const char *input, char *output) {
 }
 
 char *nextpass() {
-    char line[MAX_LINE_LENGTH * sizeof(char*)];// = malloc(MAX_LINE_LENGTH * sizeof(char*));
-    
+    char line[MAX_LINE_LENGTH * sizeof(char*)];
     
     while (fgets(line, MAX_LINE_LENGTH, file2) != NULL) {
         line[strcspn(line, "\n")] = '\0';
         strcpy(pwd, line);
     }
 
-    
     return pwd;
 }
 
 void status_thread() {
     int pwds;
 
-    const short status_sleep = 3;
+    const short status_sleep = 1;
     while(1) {
         sleep(status_sleep);
         pwds = counter / status_sleep;
@@ -291,14 +288,12 @@ int main(int argc, char **argv) {
                                     cudaMemcpyHostToDevice, plan[i].stream));
 
     // Perform GPU computations
-    reduceKernel<<<BLOCK_N, THREAD_N, 0, plan[i].stream>>>(
-        plan[i].d_Sum, plan[i].d_Data, plan[i].dataN);
+    reduceKernel<<<BLOCK_N, THREAD_N, 0, plan[i].stream>>>(plan[i].d_Sum, plan[i].d_Data, plan[i].dataN);
     getLastCudaError("reduceKernel() execution failed.\n");
 
     // Read back GPU results
     checkCudaErrors(cudaMemcpyAsync(plan[i].h_Sum_from_device, plan[i].d_Sum,
-                                    ACCUM_N * sizeof(float),
-                                    cudaMemcpyDeviceToHost, plan[i].stream));
+                                    ACCUM_N * sizeof(float),cudaMemcpyDeviceToHost, plan[i].stream));
   }
 
   // Process GPU results
@@ -353,7 +348,7 @@ int main(int argc, char **argv) {
   diff = fabs(sumCPU - sumGPU) / fabs(sumCPU);
   printf("  GPU sum: %f\n  CPU sum: %f\n", sumGPU, sumCPU);
   printf("  Relative difference: %E \n\n", diff);
-  printf("  Cracked Password: %s\n\n",password_good);
+
 
   // Cleanup and shutdown
   for (i = 0; i < GPU_N; i++) {
