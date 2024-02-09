@@ -228,8 +228,9 @@ int main(int argc, char **argv) {
   printf("CUDA-capable device count: %i\n", GPU_N);
 
   printf("Generating input data...\n\n");
-if (argc < 1) {
+  if (argc < 1) {
         printf("USAGE: %s hashes.ext\n",argv[0]);
+	exit(1);
     } else {
   fir = argv[1];
   // Subdividing input data across GPUs
