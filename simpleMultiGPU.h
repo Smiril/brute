@@ -60,7 +60,7 @@ extern "C" void launch_reduceKernel(float *d_Result, float *d_Input, int N,
                                     int BLOCK_N, int THREAD_N, cudaStream_t &s);
 extern "C" int init(int threadsx, char *mir);
 extern "C" void crack_start(unsigned int threads);
-extern "C" void crack_thread();
+extern "C" char *crack_thread();
 extern "C" void status_thread();
 extern "C" char *nextpass();
 extern "C" void sha256(const char *input, char *output);
