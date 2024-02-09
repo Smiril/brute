@@ -64,13 +64,13 @@
     FILE *file1;
     FILE *file2;
     char pwd[sizeof(char)*(PWD_LEN + 1)];
-    
+    char *current;
 ////////////////////////////////////////////////////////////////////////////////
 // Data configuration
 ////////////////////////////////////////////////////////////////////////////////
 char *fir;
 const int MAX_GPU_COUNT = 32;
-const int DATA_N = init(1,fir);
+const int DATA_N = 1048576 * 32;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Simple reduction kernel.
@@ -86,8 +86,8 @@ __global__ static void reduceKernel(float *d_Result, float *d_Input, int N) {
 
   d_Result[tid] = sum;
 }
-char password_good[4096] = {'\0', '\0'};  //this changed only once, when we found the good passord
-char password[4096+1] = {'\0','\0'}; //this contains the actual password
+char password_good[40] = {'\0', '\0'};  //this changed only once, when we found the good passord
+char password[40+1] = {'\0','\0'}; //this contains the actual password
 char hfile[255];    //the hashes file name
 char statname[259];    //status xml file name filename + ".xml"
 long counter = 0;    //this couning probed passwords
@@ -130,7 +130,6 @@ void status_thread() {
 }
 
 void crack_thread() {
-    char *current;
     char line1[MAX_LINE_LENGTH];
     char cur[SHA256_DIGEST_LENGTH];
     char lane2[SHA256_DIGEST_LENGTH];
@@ -139,7 +138,7 @@ void crack_thread() {
     while (1) {
         current = nextpass();
         file1 = fopen(hfile, "r");
-        while (! feof(file1)) {
+        while (!feof(file1)) {
             fgets(line1, MAX_LINE_LENGTH, file1);
             line1[strcspn(line1, "\n")] = '\0';
                 
@@ -150,21 +149,21 @@ void crack_thread() {
                     strcat(cur,lane2);
                 }
             
-            if (strcmp(cur,line1) != 0) {
+            if (strcmp(cur,line1)) {
                     strcpy(password_good, current);
                     finished = 1;
-                    printf("GOOD: password cracked: '%s'\n", current);
+                    printf("GOOD: password cracked: '%s'\n", password_good);
                     break;
                 }
         }
         
         counter++;
         
-        if (finished != 0) {
+        if (finished == 1) {
             break;
         }
         
-        //free(current);
+        free(current);
     }
     //return 0;
 }
@@ -178,13 +177,13 @@ void crack_start(unsigned int threads) {
         (void) pthread_create(&th[i], NULL, (void *(*)(void *))crack_thread, NULL);
     }
 
-    (void) pthread_create(&th[100], NULL, (void *(*)(void *))status_thread, NULL);
+    (void) pthread_create(&th[1], NULL, (void *(*)(void *))status_thread, NULL);
 
     for (i = 0; i < threads; i++) {
         (void) pthread_join(th[i], NULL);
     }
 
-    (void) pthread_join(th[100], NULL);
+    (void) pthread_join(th[1], NULL);
 }
 
 int init(int threadsx, char *mir) {
@@ -192,7 +191,7 @@ int init(int threadsx, char *mir) {
     threads = threadsx;
     strcpy((char*)&hfile, mir);
     crack_start(threads);
-	return 0;
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -229,7 +228,7 @@ int main(int argc, char **argv) {
         printf("USAGE: %s hashes.ext\n",argv[0]);
 	exit(1);
     } else {
-  fir = argv[1];
+  //fir = argv[1];
   // Subdividing input data across GPUs
   // Get data sizes for each GPU
   for (i = 0; i < GPU_N; i++) {
@@ -238,7 +237,7 @@ int main(int argc, char **argv) {
 
   // Take into account "odd" data sizes
   for (i = 0; i < DATA_N % GPU_N; i++) {
-    plan[i].dataN++;
+    plan[i].dataN = init(100,argv[1]);
   }
 
   // Assign data ranges to GPUs
@@ -351,6 +350,7 @@ int main(int argc, char **argv) {
   diff = fabs(sumCPU - sumGPU) / fabs(sumCPU);
   printf("  GPU sum: %f\n  CPU sum: %f\n", sumGPU, sumCPU);
   printf("  Relative difference: %E \n\n", diff);
+  printf("  Cracked Password: %s\n\n",password_good);
 
   // Cleanup and shutdown
   for (i = 0; i < GPU_N; i++) {
