@@ -1,13 +1,12 @@
-# brute 
+# brute-CUDA
 
-brute - port for Mac OSX (works on Mac OSX)
+brute - port for CUDA (works on Linux)
 
 # known bugs
  - warnings + errors
-   - Linking errors
-   - Segfaults
 
 Originally source code by Copyright (C) 2024 Smiril - sonar@gmx.com
+Parts Copyright (C) by NVIDIA (see header)
 
 
 ## Compile
@@ -15,36 +14,15 @@ Originally source code by Copyright (C) 2024 Smiril - sonar@gmx.com
 ```shell
 sudo make
 ```
-## Install
-
-```shell
-sudo make install
-```
-
-## uninstall
-
-```shell
-sudo make uninstall
-```
-
 ## Usage
 ```shell
-$ ./brute
-shaCrack! 0.1 by Smiril (sonar@gmx.com)
-
-USAGE: brute [--threads NUM] hashes.ext
-       For more information please run "brute --help"
+$ ./brute-CUDA hashes.txt
 ```
 
 ## Example
 
  **sha256**
 ```shell
-$ ./brute --threads 2 test.txt
-shaCrack! 0.1 by Smiril (sonar@gmx.com)
-
-Probing: 'test' [1 pwds/sec]
-Probing: '123' [1 pwds/sec]
-Probing: 'password' [1 pwds/sec]
+$ ./brute test.txt
 GOOD: password cracked: 'password'
 ```

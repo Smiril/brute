@@ -7,6 +7,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 Known bugs:
-   The progam isn't test libssl.dylib and libcrypto.dylib available.
+   The progam isn't test libssl.so and libcrypto.so available.
 
 
