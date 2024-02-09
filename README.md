@@ -6,6 +6,7 @@ brute - port for CUDA (works on Linux)
  - warnings + errors
 
 Originally source code by Copyright (C) 2024 Smiril - sonar@gmx.com
+
 Parts Copyright (C) by NVIDIA (see header)
 
 
