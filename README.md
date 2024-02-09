@@ -29,7 +29,7 @@ Starting simpleMultiGPU
 CUDA-capable device count: 1
 Generating input data...
 
-GOOD: password cracked: '*7¡Vamos!'
+GOOD: password cracked: 'password'
 Computing with 1 GPUs...
   GPU Processing time: 0.408000 (ms)
 
