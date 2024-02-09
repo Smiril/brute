@@ -202,7 +202,7 @@ int init(int threadsx, char *mir) {
 // Program main
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char **argv) {
-  fir = argv[1];
+
   // Solver config
   TGPUplan plan[MAX_GPU_COUNT];
 
@@ -228,7 +228,10 @@ int main(int argc, char **argv) {
   printf("CUDA-capable device count: %i\n", GPU_N);
 
   printf("Generating input data...\n\n");
-
+if (argc < 1) {
+        printf("USAGE: %s hashes.ext\n",argv[0]);
+    } else {
+  fir = argv[1];
   // Subdividing input data across GPUs
   // Get data sizes for each GPU
   for (i = 0; i < GPU_N; i++) {
@@ -359,6 +362,6 @@ int main(int argc, char **argv) {
 
         fclose(file1);
         fclose(file2);
-
+}
   exit((diff < 1e-5) ? EXIT_SUCCESS : EXIT_FAILURE);
 }
