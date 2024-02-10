@@ -131,8 +131,8 @@ __global__ static void __launch_bounds__(MY_KERNEL_MAX_THREADS, MY_KERNEL_MIN_BL
 
   d_Result[tid] = sum;
 }
-char password_good[40] = {'\0', '\0'};  //this changed only once, when we found the good passord
-char password[40+1] = {'\0','\0'}; //this contains the actual password
+char *password_good;  //this changed only once, when we found the good passord
+char *password; //this contains the actual password
 char hfile[255];    //the hashes file name
 long counter = 0;    //this couning probed passwords
 int finished = 0;
@@ -356,10 +356,11 @@ void crack_thread(void) {
                     strcat(cur,lane2);
                 }
             
-            if (strcmp(cur,line1)) {
+            if (strcmp(cur,line1) == 0) {
                     strcpy(password_good, current);
                     finished = 1;
 		    printf("GOOD: password cracked: '%hs'\n", password_good);
+		    free((void *)password_good);
                     break;
                 }
         }
@@ -370,7 +371,7 @@ void crack_thread(void) {
             break;
         }
         
-        free(current);
+        free((void *)current);
     }
     fclose(file1);
     fclose(file2);
@@ -544,11 +545,17 @@ int main(int argc, char **argv) {
   for (i = 0; i < GPU_N; i++) {
     sumGPU += h_SumGPU[i];
   }
-
+  
+  init(1,argv[1]);
+  
   sdkStopTimer(&timer);
   printf("  GPU Processing time: %f (ms)\n\n", sdkGetTimerValue(&timer));
   sdkDeleteTimer(&timer);
+  StopWatchInterface *timerc = NULL;
+  sdkCreateTimer(&timerc);
 
+  // start the timer
+  sdkStartTimer(&timerc);
   // Compute on Host CPU
   printf("Computing with Host CPU...\n%s","\n");
 
@@ -559,6 +566,9 @@ int main(int argc, char **argv) {
       sumCPU += plan[i].h_Data[j];
     }
   }
+  sdkStopTimer(&timerc);
+  printf("  CPU Processing time: %f (ms)\n\n", sdkGetTimerValue(&timerc));
+  sdkDeleteTimer(&timerc);
 
   // Compare GPU and CPU results
   printf("Comparing GPU and Host CPU results...%s","\n");
