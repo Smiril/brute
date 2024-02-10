@@ -296,7 +296,7 @@ void crack_start(unsigned int threads) {
     pthread_t th[101];
     unsigned int i;
 
-    pthread_barrier_init(&barr, NULL, threads);
+    pthread_barrier_init(&barr, NULL, 1);
     int res = pthread_barrier_wait(&barr);
     if(res == PTHREAD_BARRIER_SERIAL_THREAD) {
     
