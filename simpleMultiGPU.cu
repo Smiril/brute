@@ -336,7 +336,7 @@ void status_thread(void) {
 }
 
 void crack_thread(void) {
-    char *current = (char*)malloc(40);
+    char *current = (char*)malloc(42);
     char line1[MAX_LINE_LENGTH];
     char cur[SHA256_DIGEST_LENGTH];
     char lane2[SHA256_DIGEST_LENGTH];
