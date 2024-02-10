@@ -77,7 +77,7 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <unistd.h>
-#define MAX_LINE_LENGTH 40
+#define MAX_LINE_LENGTH 42
 #include <openssl/sha.h>
 #include <assert.h>
 #include <cuda.h>
@@ -336,7 +336,7 @@ void status_thread(void) {
 }
 
 void crack_thread(void) {
-    char *current = (char*)malloc(42);
+    char *current = (char*)malloc(MAX_LINE_LENGTH);
     char line1[MAX_LINE_LENGTH];
     char cur[SHA256_DIGEST_LENGTH];
     char lane2[SHA256_DIGEST_LENGTH];
