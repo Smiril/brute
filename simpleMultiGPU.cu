@@ -78,7 +78,6 @@
 #include <stdint.h>
 #include <unistd.h>
 #define MAX_LINE_LENGTH 42
-#include <openssl/sha.h>
 #include <assert.h>
 #include <cuda.h>
 // CUDA runtime
@@ -338,9 +337,9 @@ void status_thread(void) {
 void crack_thread(void) {
     char *current = (char*)malloc(MAX_LINE_LENGTH);
     char line1[MAX_LINE_LENGTH];
-    char cur[SHA256_DIGEST_LENGTH];
-    char lane2[SHA256_DIGEST_LENGTH];
-    char hashed_password[SHA256_DIGEST_LENGTH * 2 + 1]; // Each byte of hash produces two characters in hex
+    char cur[SHA256_DIGEST_SIZE];
+    char lane2[SHA256_DIGEST_SIZE];
+    char hashed_password[SHA256_DIGEST_SIZE * 2 + 1]; // Each byte of hash produces two characters in hex
     file2 = fopen("/usr/local/share/rockyou.txt", "r");
     while (1) {
         current = nextpass();
@@ -351,7 +350,7 @@ void crack_thread(void) {
                 
             sha256((const unsigned char *)current, (unsigned int)strlen(current), (unsigned char *)hashed_password);
                 
-            for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+            for (int i = 0; i < SHA256_DIGEST_SIZE; i++) {
                     sprintf(lane2,"%02x", (unsigned char)hashed_password[i]);
                     strcat(cur,lane2);
                 }
