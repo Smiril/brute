@@ -335,18 +335,18 @@ void init(int argc, char **argv) {
     int threads = 1;
 
     if (argc == 1) {
-        printf("USAGE: brute  [--threads NUM] hashes.ext\n");
-        printf("       For more information please run \"brute --help\"\n");
+        printf("USAGE: %s  --threads [NUM] --hash [hashes.ext]\n",argv[0]);
+        printf("       For more information please run \"%s --help\"\n",argv[0]);
         help = 1;
     } else {
-        for (i = 1; i < argc; i++) {
-            if (strcmp(argv[i],"--help") == 0) {
-                printf("Usage:   brute  [--threads NUM] hashes.ext\n\n");
-                printf("Options: --help: show this screen.\n");
-                printf("         --threads: you can specify how many threads\n");
-                printf("                    will be run, maximum 100 (default: 12)\n\n");
-   		printf("         --hash: you can specify a hash file\n");
-		printf("Info:    This program supports only ASCII HASH FILES.\n");
+        for (s = 1; s < argc; s++) {
+            if (strcmp(argv[s],"--help") == 0) {
+                printf("Usage:   %s  [--threads NUM] hashes.ext\n\n",argv[0]);
+                printf("Options: --help: show this screen.%s","\n");
+                printf("         --threads: you can specify how many threads%s","\n");
+                printf("                    will be run, maximum 100 (default: 12)\n%s","\n");
+		printf("         --hash: you can specify hash file%s","\n");
+                printf("Info:    This program supports only ASCII HASH FILES.%s","\n");
                 help = 1;
                 break;
             } else if (strcmp(argv[i],"--threads") == 0) {
