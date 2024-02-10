@@ -490,9 +490,9 @@ if (argc < 2) {
                 printf("Usage:   %s  [--threads NUM] hashes.ext\n\n",argv[0]);
                 printf("Options: --help: show this screen.%s","\n");
                 printf("         --threads: you can specify how many threads%s","\n");
-		printf("         --hash: you can specify hash file%s","\n");
                 printf("                    will be run, maximum 100 (default: 12)\n%s","\n");
-                printf("Info:    This program supports only TXT HASH FILES.%s","\n");
+		printf("         --hash: you can specify hash file%s","\n");
+                printf("Info:    This program supports only ASCII HASH FILES.%s","\n");
                 help = 1;
                 break;
             } else if (strcmp(argv[s],"--threads") == 0) {
