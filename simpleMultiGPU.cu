@@ -79,7 +79,15 @@ const int DATA_N = 1048576 * 32;
 // Refer to the 'reduction' CUDA Sample describing
 // reduction optimization strategies
 ////////////////////////////////////////////////////////////////////////////////
-__global__ static void reduceKernel(float *d_Result, float *d_Input, int N) {
+#define THREADS_PER_BLOCK 256
+#if __CUDA_ARCH__ >= 200
+#define MY_KERNEL_MAX_THREADS (2 * THREADS_PER_BLOCK)
+#define MY_KERNEL_MIN_BLOCKS 3
+#else
+#define MY_KERNEL_MAX_THREADS THREADS_PER_BLOCK
+#define MY_KERNEL_MIN_BLOCKS 2
+#endif
+__global__ static void __launch_bounds__(MY_KERNEL_MAX_THREADS, MY_KERNEL_MIN_BLOCKS) reduceKernel(float *d_Result, float *d_Input, int N) {
   const int tid = blockIdx.x * blockDim.x + threadIdx.x;
   const int threadN = gridDim.x * blockDim.x;
   float sum = 0;
