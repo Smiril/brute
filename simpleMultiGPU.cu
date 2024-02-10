@@ -170,6 +170,7 @@ char *password; //this contains the actual password
 char hfile[255];    //the hashes file name
 long counter = 0;    //this couning probed passwords
 int finished = 0;
+pthread_barrier_t barr;
 
 #define UNPACK32(x, str)                      \
 {                                             \
