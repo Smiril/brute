@@ -36,6 +36,7 @@
 
 #ifndef SIMPLEMULTIGPU_H
 #define SIMPLEMULTIGPU_H
+
 #define SHA256_DIGEST_SIZE ( 256 / 8)
 #define SHA256_BLOCK_SIZE  ( 512 / 8)
 
