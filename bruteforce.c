@@ -286,7 +286,6 @@ void crack_thread(void) {
         }
         
         free((void *)current);
-    	}
     }
     fclose(file1);
     fclose(file2);
