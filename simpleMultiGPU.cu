@@ -54,6 +54,10 @@
 #include <helper_functions.h>
 #include <helper_cuda.h>
 
+#if defined(__CUDA_ARCH__)
+#define printf(f, ...) ((void)(f, __VA_ARGS__),0)
+#endif
+
 #ifndef MAX
 #define MAX(a, b) (a > b ? a : b)
 #endif
@@ -61,10 +65,9 @@
 #include "simpleMultiGPU.h"
 
 #define PWD_LEN 40
-    FILE *file1;
-    FILE *file2;
-    char pwd[sizeof(char)*(PWD_LEN + 1)];
-    char *current;
+FILE *file1;
+FILE *file2;
+char pwd[sizeof(char)*(PWD_LEN + 1)];
 ////////////////////////////////////////////////////////////////////////////////
 // Data configuration
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,6 +86,7 @@ __global__ static void reduceKernel(float *d_Result, float *d_Input, int N) {
   float sum = 0;
 
   for (int pos = tid; pos < N; pos += threadN) sum += d_Input[pos];
+  __syncthreads();
 
   d_Result[tid] = sum;
 }
@@ -110,7 +114,7 @@ char *nextpass() {
     return pwd;
 }
 
-void status_thread() {
+void status_thread(void) {
     int pwds;
 
     const short status_sleep = 1;
@@ -123,11 +127,12 @@ void status_thread() {
             break;
         }
         
-        printf("Probing: '%s' [%d pwds/sec]\n", password, pwds);
+        printf("Probing: '%hs' [%hd pwds/sec]\n", password, pwds);
         }
 }
 
-char *crack_thread() {
+void crack_thread(void) {
+    char* current = (char*)malloc(123);
     char line1[MAX_LINE_LENGTH];
     char cur[SHA256_DIGEST_LENGTH];
     char lane2[SHA256_DIGEST_LENGTH];
@@ -150,15 +155,15 @@ char *crack_thread() {
             if (strcmp(cur,line1)) {
                     strcpy(password_good, current);
                     finished = 1;
-		    printf("GOOD: password cracked: '%s'\n", current);
-                    return password_good;
+		    printf("GOOD: password cracked: '%hs'\n", password_good);
+                    //return password_good;
                     break;
                 }
         }
         
         counter++;
         
-        if (finished != 0) {
+        if (finished != 0 && !feof(file1)) {
             break;
         }
         
@@ -166,7 +171,7 @@ char *crack_thread() {
     }
     fclose(file1);
     fclose(file2);
-    return password_good;
+    //return password_good;
 }
 
 
@@ -185,6 +190,7 @@ void crack_start(unsigned int threads) {
     }
 
     (void) pthread_join(th[100], NULL);
+
 }
 
 int init(int threadsx, char *mir) {
@@ -218,7 +224,7 @@ int main(int argc, char **argv) {
   const int THREAD_N = 256;
   const int ACCUM_N = BLOCK_N * THREAD_N;
 
-  printf("Starting simpleMultiGPU\n");
+  printf("Starting %s\n",argv[0]);
   checkCudaErrors(cudaGetDeviceCount(&GPU_N));
 
   if (GPU_N > MAX_GPU_COUNT) {
@@ -227,7 +233,7 @@ int main(int argc, char **argv) {
 
   printf("CUDA-capable device count: %i\n", GPU_N);
 
-  printf("Generating input data...\n\n");
+  printf("Generating input data...\n%s","\n");
 
 
   // Subdividing input data across GPUs
@@ -238,7 +244,7 @@ int main(int argc, char **argv) {
 
   // Take into account "odd" data sizes
   for (i = 0; i < DATA_N % GPU_N; i++) {
-    plan[i].dataN = init(100,argv[1]);
+    plan[i].dataN = init(1,argv[1]);
   }
 
   // Assign data ranges to GPUs
@@ -253,6 +259,7 @@ int main(int argc, char **argv) {
   // (GPU and System page-locked)
   for (i = 0; i < GPU_N; i++) {
     checkCudaErrors(cudaSetDevice(i));
+    checkCudaErrors(cudaDeviceSetLimit(cudaLimitMallocHeapSize, 256*1024*1024));
     checkCudaErrors(cudaStreamCreate(&plan[i].stream));
     // Allocate memory
     checkCudaErrors(
@@ -291,7 +298,7 @@ int main(int argc, char **argv) {
     // Perform GPU computations
     reduceKernel<<<BLOCK_N, THREAD_N, 0, plan[i].stream>>>(plan[i].d_Sum, plan[i].d_Data, plan[i].dataN);
     getLastCudaError("reduceKernel() execution failed.\n");
-
+    cudaDeviceSynchronize();
     // Read back GPU results
     checkCudaErrors(cudaMemcpyAsync(plan[i].h_Sum_from_device, plan[i].d_Sum,
                                     ACCUM_N * sizeof(float),cudaMemcpyDeviceToHost, plan[i].stream));
@@ -334,9 +341,9 @@ int main(int argc, char **argv) {
   sdkDeleteTimer(&timer);
 
   // Compute on Host CPU
-  printf("Computing with Host CPU...\n\n");
-  init(1,argv[1]);
-  sumCPU = 0;
+  printf("Computing with Host CPU...\n%s","\n");
+  //init(1,argv[1]);
+  sumCPU = 1;
 
   for (i = 0; i < GPU_N; i++) {
     for (j = 0; j < plan[i].dataN; j++) {
@@ -345,7 +352,7 @@ int main(int argc, char **argv) {
   }
 
   // Compare GPU and CPU results
-  printf("Comparing GPU and Host CPU results...\n");
+  printf("Comparing GPU and Host CPU results...%s","\n");
   diff = fabs(sumCPU - sumGPU) / fabs(sumCPU);
   printf("  GPU sum: %f\n  CPU sum: %f\n", sumGPU, sumCPU);
   printf("  Relative difference: %E \n\n", diff);
