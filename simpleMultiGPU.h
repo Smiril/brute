@@ -33,6 +33,7 @@
  * application. On the other side, you can still extend your desktop to screens
  * attached to both GPUs.
  */
+
 /*
  * FIPS 180-2 SHA-224/256/384/512 implementation
  * Last update: 02/02/2007
@@ -66,6 +67,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef SIMPLEMULTIGPU_H
 #define SIMPLEMULTIGPU_H
 
