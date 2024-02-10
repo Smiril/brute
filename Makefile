@@ -262,7 +262,7 @@ else
       BUILD_TYPE := release
 endif
 
-ALL_CCFLAGS := -lssl -lcrypto
+ALL_CCFLAGS := -lpthread
 ALL_CCFLAGS += $(NVCCFLAGS)
 ALL_CCFLAGS += $(EXTRA_NVCCFLAGS)
 ALL_CCFLAGS += $(addprefix -Xcompiler ,$(CCFLAGS))
