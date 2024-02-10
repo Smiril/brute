@@ -458,7 +458,7 @@ int init(int threadsx, char *mir) {
     threads = threadsx;
     if (threads < 1) threads = 1;
     if (threads > 100) {
-        printf("INFO: number of threads adjusted to 12\n");
+        printf("INFO: number of threads adjusted to 12%s","\n");
         threads = 12;
     }
     strcpy((char*)&hfile, mir);
