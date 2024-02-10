@@ -344,7 +344,7 @@ void init(int argc, char **argv) {
                 printf("Usage:   brute  [--threads NUM] hashes.ext\n\n");
                 printf("Options: --help: show this screen.\n");
                 printf("         --threads: you can specify how many threads\n");
-                printf("                    will be run, maximum 100 (default: 10)\n\n");
+                printf("                    will be run, maximum 100 (default: 12)\n\n");
                 printf("Info:    This program supports only TXT HASH FILES.\n");
                 help = 1;
                 break;
@@ -353,8 +353,8 @@ void init(int argc, char **argv) {
                     sscanf(argv[++i], "%d", &threads);
                     if (threads < 1) threads = 1;
                     if (threads > 100) {
-                        printf("INFO: number of threads adjusted to 10\n");
-                        threads = 10;
+                        printf("INFO: number of threads adjusted to 12\n");
+                        threads = 12;
                     }
                 } else {
                     printf("ERROR: missing parameter for option: --threads!\n");
