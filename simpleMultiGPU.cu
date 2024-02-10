@@ -227,16 +227,17 @@ int main(int argc, char **argv) {
 
   cudaDeviceProp Propx;
   int deviceID;
+
   printf("Starting %s\n",argv[0]);
   checkCudaErrors(cudaGetDeviceCount(&GPU_N));
   checkCudaErrors(cudaGetDevice(&deviceID));
   checkCudaErrors(cudaGetDeviceProperties(&Propx, deviceID));
+
   int threadsPerBlock = (Propx.major >= 2 ? 2 * THREADS_PER_BLOCK : THREADS_PER_BLOCK);
+
   const int BLOCK_N = 32;
   const int THREAD_N = threadsPerBlock;
   const int ACCUM_N = BLOCK_N *THREAD_N;
-
-
 
   if (GPU_N > MAX_GPU_COUNT) {
     GPU_N = MAX_GPU_COUNT;
