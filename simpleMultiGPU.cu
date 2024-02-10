@@ -440,13 +440,13 @@ void crack_start(unsigned int threads) {
     } else if(res != 0) {
         perror("Threading");
     } else {
-        (void) pthread_create(&th[100], NULL, (void *(*)(void *))crack_thread, NULL);
+        (void) pthread_create(&th[1], NULL, (void *(*)(void *))crack_thread, NULL);
 
-        (void) pthread_create(&th[100], NULL, (void *(*)(void *))status_thread, NULL);
+        (void) pthread_create(&th[10], NULL, (void *(*)(void *))status_thread, NULL);
 
-        (void) pthread_join(th[100], NULL);
+        (void) pthread_join(th[1], NULL);
 
-        (void) pthread_join(th[100], NULL);
+        (void) pthread_join(th[10], NULL);
        }
 }
 
@@ -469,12 +469,6 @@ int init(int threadsx, char *mir) {
 int main(int argc, char **argv) {
     // Print author
     printf("shaCrack! 0.2 by Smiril (sonar@gmx.com)\n\n");
-/*
-if (argc < 2) {
-        printf("USAGE: %s hashes.ext\n",argv[0]);
-	exit(1);
-    }
-*/
     int s;
     int help = 0;
     int threads = 1;
