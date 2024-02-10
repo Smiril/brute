@@ -475,7 +475,7 @@ if (argc < 2) {
 	exit(1);
     }
 */
-    int i, j;
+    int s;
     int help = 0;
     int threads = 1;
     char *hash;
@@ -485,8 +485,8 @@ if (argc < 2) {
         printf("       For more information please run \"%s --help\"\n",argv[0]);
         help = 1;
     } else {
-        for (i = 1; i < argc; i++) {
-            if (strcmp(argv[i],"--help") == 0) {
+        for (s = 1; s < argc; s++) {
+            if (strcmp(argv[s],"--help") == 0) {
                 printf("Usage:   %s  [--threads NUM] hashes.ext\n\n",argv[0]);
                 printf("Options: --help: show this screen.%s","\n");
                 printf("         --threads: you can specify how many threads%s","\n");
@@ -495,9 +495,9 @@ if (argc < 2) {
                 printf("Info:    This program supports only TXT HASH FILES.%s","\n");
                 help = 1;
                 break;
-            } else if (strcmp(argv[i],"--threads") == 0) {
-                if ((i + 1) < argc) {
-                    sscanf(argv[++i], "%d", &threads);
+            } else if (strcmp(argv[s],"--threads") == 0) {
+                if ((s + 1) < argc) {
+                    sscanf(argv[++s], "%d", &threads);
                     if (threads < 1) threads = 1;
                     if (threads > 100) {
                         printf("INFO: number of threads adjusted to 12\n");
@@ -506,9 +506,9 @@ if (argc < 2) {
                     printf("ERROR: missing parameter for option: --threads!%s","\n");
                     help = 1;
                 }
-                } else if (strcmp(argv[i],"--hash") == 0) {
-                if ((i + 1) < argc) {
-                    sscanf(argv[++i], "%s", &hash);
+                } else if (strcmp(argv[s],"--hash") == 0) {
+                if ((s + 1) < argc) {
+                    sscanf(argv[++s], "%s", &hash);
                 } else {
                     printf("ERROR: missing parameter for option: --hash!%s","\n");
                     help = 1;
