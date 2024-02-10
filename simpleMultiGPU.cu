@@ -379,7 +379,6 @@ void crack_thread(void) {
     char hashed_password[SHA256_DIGEST_SIZE * 2 + 1]; // Each byte of hash produces two characters in hex
     file2 = fopen("/usr/local/share/rockyou.txt", "r");
     pthread_mutex_t mutex;
-
     pthread_mutex_lock(&mutex);
     flag=1;
 
