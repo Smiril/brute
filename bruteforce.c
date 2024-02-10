@@ -349,6 +349,7 @@ void crack_start(unsigned int threads) {
     (void) pthread_join(th[100], NULL);
 
 }
+
 void init(int argc, char **argv) {
     int i, j;
     int help = 0;
