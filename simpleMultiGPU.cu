@@ -469,9 +469,54 @@ int init(int threadsx, char *mir) {
 int main(int argc, char **argv) {
     // Print author
     printf("shaCrack! 0.2 by Smiril (sonar@gmx.com)\n\n");
-  if (argc < 2) {
+/*
+if (argc < 2) {
         printf("USAGE: %s hashes.ext\n",argv[0]);
 	exit(1);
+    }
+*/
+    int i, j;
+    int help = 0;
+    int threads = 1;
+    char *hash;
+
+    if (argc == 1) {
+        printf("USAGE: %s  [--threads NUM] hashes.ext\n",argv[0]);
+        printf("       For more information please run \"%s --help\"\n",argv[0]);
+        help = 1;
+    } else {
+        for (i = 1; i < argc; i++) {
+            if (strcmp(argv[i],"--help") == 0) {
+                printf("Usage:   %s  [--threads NUM] hashes.ext\n\n",argv[0]);
+                printf("Options: --help: show this screen.%s","\n");
+                printf("         --threads: you can specify how many threads%s","\n");
+                printf("                    will be run, maximum 100 (default: 12)\n%s","\n");
+                printf("Info:    This program supports only TXT HASH FILES.%s","\n");
+                help = 1;
+                break;
+            } else if (strcmp(argv[i],"--threads") == 0) {
+                if ((i + 1) < argc) {
+                    sscanf(argv[++i], "%d", &threads);
+                    if (threads < 1) threads = 1;
+                    if (threads > 100) {
+                        printf("INFO: number of threads adjusted to 12\n");
+                        threads = 12;
+                    }
+                } else if (strcmp(argv[i],"--hash") == 0) {
+                if ((i + 1) < argc) {
+                    sscanf(argv[++i], "%s", &hash);
+                } else {
+                    printf("ERROR: missing parameter for option: --threads!%s","\n");
+                    help = 1;
+                }
+            } else {
+                printf("%s","\n");
+            }
+        }
+    }
+
+    if (help == 1) {
+        return;
     }
   // Solver config
   TGPUplan plan[MAX_GPU_COUNT];
@@ -514,7 +559,7 @@ int main(int argc, char **argv) {
 
   // Take into account "odd" data sizes
   for (i = 0; i < DATA_N % GPU_N; i++) {
-    plan[i].dataN = init(32,argv[1]);
+    plan[i].dataN = init(threads,hash);
   }
 
   // Assign data ranges to GPUs
