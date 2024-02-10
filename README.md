@@ -29,15 +29,13 @@ Starting simpleMultiGPU
 CUDA-capable device count: 1
 Generating input data...
 
-GOOD: password cracked: 'password'
 Computing with 1 GPUs...
-  GPU Processing time: 0.408000 (ms)
+  GPU Processing time: 11.510000 (ms)
 
 Computing with Host CPU...
 
 Comparing GPU and Host CPU results...
-  GPU sum: 0.000000
-  CPU sum: 0.000000
-  Relative difference: -NAN 
-
+  GPU sum: 16777290.000000
+  CPU sum: 16777295.395033
+  Relative difference: 3.215675E-07 
 ```
