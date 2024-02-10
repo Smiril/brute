@@ -382,7 +382,7 @@ void crack_thread(void) {
     pthread_mutex_lock(&mutex);
     flag=1;
 
-    while (1) {
+    while (flag == 1) {
         current = nextpass();
         file1 = fopen(hfile, "r");
         while (!feof(file1)) {
@@ -408,6 +408,7 @@ void crack_thread(void) {
         counter++;
         
         if (finished != 0 && feof(file1)) {
+            flag = 0;
             break;
         }
         
