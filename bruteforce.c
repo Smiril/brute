@@ -345,7 +345,8 @@ void init(int argc, char **argv) {
                 printf("Options: --help: show this screen.\n");
                 printf("         --threads: you can specify how many threads\n");
                 printf("                    will be run, maximum 100 (default: 12)\n\n");
-                printf("Info:    This program supports only TXT HASH FILES.\n");
+   		printf("         --hash: you can specify a hash file\n");
+		printf("Info:    This program supports only ASCII HASH FILES.\n");
                 help = 1;
                 break;
             } else if (strcmp(argv[i],"--threads") == 0) {
@@ -360,8 +361,15 @@ void init(int argc, char **argv) {
                     printf("ERROR: missing parameter for option: --threads!\n");
                     help = 1;
                 }
+            } else if (strcmp(argv[s],"--hash") == 0) {
+                if ((s + 1) < argc) {
+                    sscanf(argv[++s], "%s", &hfile);
+                } else {
+                    printf("ERROR: missing parameter for option: --hash!%s","\n");
+                    help = 1;
+                }
             } else {
-                strcpy((char*)&hfile, argv[i]);
+                printf("%s","\n");
             }
         }
     }
