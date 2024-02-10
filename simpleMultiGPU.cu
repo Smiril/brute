@@ -46,7 +46,7 @@
 #define MAX_LINE_LENGTH 40
 #include <openssl/sha.h>
 #include <assert.h>
-
+#include <cuda.h>
 // CUDA runtime
 #include <cuda_runtime.h>
 
@@ -139,7 +139,7 @@ void status_thread(void) {
 }
 
 void crack_thread(void) {
-    char* current = (char*)malloc(123);
+    char* current = (char*)malloc(40);
     char line1[MAX_LINE_LENGTH];
     char cur[SHA256_DIGEST_LENGTH];
     char lane2[SHA256_DIGEST_LENGTH];
@@ -223,14 +223,20 @@ int main(int argc, char **argv) {
   float sumGPU;
   double sumCPU, diff;
 
-  int i, j, gpuBase, GPU_N;
+  int i, j, gpuBase, GPU_N;;
 
-  const int BLOCK_N = 32;
-  const int THREAD_N = 256;
-  const int ACCUM_N = BLOCK_N * THREAD_N;
-
+  cudaDeviceProp Propx;
+  int deviceID;
   printf("Starting %s\n",argv[0]);
   checkCudaErrors(cudaGetDeviceCount(&GPU_N));
+  checkCudaErrors(cudaGetDevice(&deviceID));
+  cudaGetDeviceProperties(&Propx, deviceID);
+  int threadsPerBlock = (Propx.major >= 2 ? 2 * THREADS_PER_BLOCK : THREADS_PER_BLOCK);
+  const int BLOCK_N = 32;
+  const int THREAD_N = threadsPerBlock;
+  const int ACCUM_N = BLOCK_N *THREAD_N;
+
+
 
   if (GPU_N > MAX_GPU_COUNT) {
     GPU_N = MAX_GPU_COUNT;
