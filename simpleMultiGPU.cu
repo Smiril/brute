@@ -263,8 +263,6 @@ void sha256_transf(sha256_ctx *ctx, const unsigned char *message,unsigned int bl
     }
 }
 
-
-
 void sha256_init(sha256_ctx *ctx)
 {
     int i;
@@ -418,7 +416,6 @@ void crack_thread(void) {
     fclose(file1);
     fclose(file2);
 }
-
 
 void crack_start(unsigned int threads) {
     pthread_t th[101];
