@@ -1,12 +1,12 @@
 CC=clang
 PREFIX=/usr/local
-DOCDIR=${PREFIX}/share/brute
+DOCDIR=${PREFIX}/share
 
 all:
-	${CC} -lssl -lcrypto -pthread bruteforce.c -O2 -o brute
+	${CC} -pthread bruteforce.c -O2 -o brute
 
 debug:
-	${CC} -Wextra -Werror -lssl -lcrypto -pthread bruteforce.c -O2 -o brute
+	${CC} -Wextra -Werror -pthread bruteforce.c -O2 -o brute
 
 clean:
 	-rm -rf *.o brute
