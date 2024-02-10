@@ -379,9 +379,6 @@ void crack_thread(void) {
     char hashed_password[SHA256_DIGEST_SIZE * 2 + 1]; // Each byte of hash produces two characters in hex
     file2 = fopen("/usr/local/share/rockyou.txt", "r");
     
-    int res = pthread_barrier_wait(&barr);
-    if(res == PTHREAD_BARRIER_SERIAL_THREAD) {
-    
     while (1) {
         current = nextpass();
         file1 = fopen(hfile, "r");
@@ -412,52 +409,20 @@ void crack_thread(void) {
         }
         
         free((void *)current);
-    	}
-   	} else if(res != 0) {
-        perror("Threading");
-    	} else {
-    while (1) {
-        current = nextpass();
-        file1 = fopen(hfile, "r");
-        while (!feof(file1)) {
-            fgets(line1, MAX_LINE_LENGTH, file1);
-            line1[strcspn(line1, "\n")] = '\0';
-                
-            sha256((const unsigned char *)current, (unsigned int)strlen(current), (unsigned char *)hashed_password);
-                
-            for (int i = 0; i < SHA256_DIGEST_SIZE; i++) {
-                    sprintf(lane2,"%02x", (unsigned char)hashed_password[i]);
-                    strcat(cur,lane2);
-                }
-            
-            if (strcmp(cur,line1) == 0) {
-                    strcpy(password_good, current);
-                    finished = 1;
-		    printf("GOOD: password cracked: '%s'\n", password_good);
-		    free((void *)password_good);
-                    break;
-                }
-        }
-        
-        counter++;
-        
-        if (finished != 0 && feof(file1)) {
-            break;
-        }
-        
-        free((void *)current);
-    	}
     }
     fclose(file1);
     fclose(file2);
 }
+
 
 void crack_start(unsigned int threads) {
     pthread_t th[101];
     unsigned int i;
 
     pthread_barrier_init(&barr, NULL, threads);
-
+    int res = pthread_barrier_wait(&barr);
+    if(res == PTHREAD_BARRIER_SERIAL_THREAD) {
+    
     for (i = 0; i < threads; i++) {
         (void) pthread_create(&th[i], NULL, (void *(*)(void *))crack_thread, NULL);
     }
@@ -470,6 +435,17 @@ void crack_start(unsigned int threads) {
 
     (void) pthread_join(th[100], NULL);
 
+    } else if(res != 0) {
+        perror("Threading");
+    } else {
+        (void) pthread_create(&th[100], NULL, (void *(*)(void *))crack_thread, NULL);
+
+        (void) pthread_create(&th[100], NULL, (void *(*)(void *))status_thread, NULL);
+
+        (void) pthread_join(th[100], NULL);
+
+        (void) pthread_join(th[100], NULL);
+       }
 }
 
 int init(int threadsx, char *mir) {
