@@ -481,7 +481,7 @@ if (argc < 2) {
     char *hash;
 
     if (argc == 1) {
-        printf("USAGE: %s  [--threads NUM] hashes.ext\n",argv[0]);
+        printf("USAGE: %s  [--threads NUM] --hash hashes.ext\n",argv[0]);
         printf("       For more information please run \"%s --help\"\n",argv[0]);
         help = 1;
     } else {
