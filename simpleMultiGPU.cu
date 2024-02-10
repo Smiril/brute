@@ -230,7 +230,7 @@ int main(int argc, char **argv) {
   printf("Starting %s\n",argv[0]);
   checkCudaErrors(cudaGetDeviceCount(&GPU_N));
   checkCudaErrors(cudaGetDevice(&deviceID));
-  cudaGetDeviceProperties(&Propx, deviceID);
+  checkCudaErrors(cudaGetDeviceProperties(&Propx, deviceID));
   int threadsPerBlock = (Propx.major >= 2 ? 2 * THREADS_PER_BLOCK : THREADS_PER_BLOCK);
   const int BLOCK_N = 32;
   const int THREAD_N = threadsPerBlock;
