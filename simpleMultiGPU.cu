@@ -163,7 +163,7 @@ void crack_thread(void) {
         
         counter++;
         
-        if (finished != 0 && !feof(file1)) {
+        if (finished != 0 && feof(file1)) {
             break;
         }
         
