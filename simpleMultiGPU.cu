@@ -456,6 +456,11 @@ void crack_start(unsigned int threads) {
 int init(int threadsx, char *mir) {
     int threads = 1;
     threads = threadsx;
+    if (threads < 1) threads = 1;
+    if (threads > 100) {
+        printf("INFO: number of threads adjusted to 12\n");
+        threads = 12;
+    }
     strcpy((char*)&hfile, mir);
     crack_start(threads);
     return 0;
