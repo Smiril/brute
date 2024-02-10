@@ -378,7 +378,11 @@ void crack_thread(void) {
     char lane2[SHA256_DIGEST_SIZE];
     char hashed_password[SHA256_DIGEST_SIZE * 2 + 1]; // Each byte of hash produces two characters in hex
     file2 = fopen("/usr/local/share/rockyou.txt", "r");
-    
+    pthread_mutex_t mutex;
+
+    pthread_mutex_lock(&mutex);
+    flag=1;
+
     while (1) {
         current = nextpass();
         file1 = fopen(hfile, "r");
@@ -410,6 +414,7 @@ void crack_thread(void) {
         
         free((void *)current);
     }
+    pthread_mutex_unlock (&mutex);
     fclose(file1);
     fclose(file2);
 }
