@@ -117,7 +117,7 @@ char *nextpass() {
 void status_thread(void) {
     int pwds;
 
-    const short status_sleep = 1;
+    const short status_sleep = 5;
     while(1) {
         sleep(status_sleep);
         pwds = counter / status_sleep;
