@@ -156,7 +156,6 @@ void crack_thread(void) {
                     strcpy(password_good, current);
                     finished = 1;
 		    printf("GOOD: password cracked: '%hs'\n", password_good);
-                    //return password_good;
                     break;
                 }
         }
@@ -171,7 +170,6 @@ void crack_thread(void) {
     }
     fclose(file1);
     fclose(file2);
-    //return password_good;
 }
 
 
