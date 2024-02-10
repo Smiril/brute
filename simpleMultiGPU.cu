@@ -335,7 +335,7 @@ int main(int argc, char **argv) {
 
   // Compute on Host CPU
   printf("Computing with Host CPU...\n\n");
-
+  init(1,argv[1]);
   sumCPU = 0;
 
   for (i = 0; i < GPU_N; i++) {
