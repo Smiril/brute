@@ -408,6 +408,8 @@ int init(int threadsx, char *mir) {
 // Program main
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char **argv) {
+    // Print author
+    printf("shaCrack! 0.2 by Smiril (sonar@gmx.com)\n\n");
   if (argc < 2) {
         printf("USAGE: %s hashes.ext\n",argv[0]);
 	exit(1);
