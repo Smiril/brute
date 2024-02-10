@@ -508,7 +508,7 @@ int main(int argc, char **argv) {
 
   // Take into account "odd" data sizes
   for (i = 0; i < DATA_N % GPU_N; i++) {
-    plan[i].dataN = init(1,argv[1]);
+    plan[i].dataN = init(32,argv[1]);
   }
 
   // Assign data ranges to GPUs
