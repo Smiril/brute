@@ -36,15 +36,20 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <unistd.h>
-#define MAX_LINE_LENGTH 4096
+#define MAX_LINE_LENGTH 40
+#define PWD_LEN 40
+    FILE *file1;
+    FILE *file2;
+    char pwd[sizeof(char)*(PWD_LEN + 1)];
+    char *current;
 #include <openssl/sha.h>
-char password[4096+1] = {'\0','\0'}; //this contains the actual password
-char password_good[4096] = {'\0', '\0'};  //this changed only once, when we found the good passord
+char password[40+1] = {'\0','\0'}; //this contains the actual password
+char password_good[40] = {'\0', '\0'};  //this changed only once, when we found the good passord
 long counter = 0;    //this couning probed passwords
 char hfile[255];    //the hashes file name
 char statname[259];    //status xml file name filename + ".xml"
 int finished = 0;
-FILE *file2;
+
 
 void crack_start(unsigned int threads);
 
@@ -56,10 +61,7 @@ void sha256(const char *input, char *output) {
 }
 
 char *nextpass() {
-    char *line = malloc(MAX_LINE_LENGTH * sizeof(char*));
-    char *pwd = malloc(sizeof(char)*(PWD_LEN + 1));
-    
-    file2 = fopen("/usr/local/share/brute/rockyou.txt", "r");
+    char line[MAX_LINE_LENGTH * sizeof(char*)];
     
     while (fgets(line, MAX_LINE_LENGTH, file2) != NULL) {
         line[strcspn(line, "\n")] = '\0';
@@ -69,9 +71,10 @@ char *nextpass() {
     return pwd;
 }
 
-void *status_thread() {
+void status_thread() {
     int pwds;
-    const short status_sleep = 3;
+
+    const short status_sleep = 1;
     while(1) {
         sleep(status_sleep);
         pwds = counter / status_sleep;
@@ -85,20 +88,17 @@ void *status_thread() {
         }
 }
 
-void *crack_thread() {
-    char *current;
-    char ret[200];
-    char cmd[100];
-    FILE *file1;
+char *crack_thread() {
     char line1[MAX_LINE_LENGTH];
     char cur[SHA256_DIGEST_LENGTH];
     char lane2[SHA256_DIGEST_LENGTH];
     char hashed_password[SHA256_DIGEST_LENGTH * 2 + 1]; // Each byte of hash produces two characters in hex
-    
+    file2 = fopen("/usr/local/share/rockyou.txt", "r");
+
     while (1) {
         current = nextpass();
         file1 = fopen(hfile, "r");
-        while (! feof(file1)) {
+        while (!feof(file1)) {
             fgets(line1, MAX_LINE_LENGTH, file1);
             line1[strcspn(line1, "\n")] = '\0';
                 
@@ -109,16 +109,14 @@ void *crack_thread() {
                     strcat(cur,lane2);
                 }
             
-            if (strcmp(cur,line1) != 0) {
+            if (strcmp(cur,line1)) {
                     strcpy(password_good, current);
                     finished = 1;
-                    printf("GOOD: password cracked: '%s'\n", current);
+		    printf("GOOD: password cracked: '%s'\n", current);
+                    return password_good;
                     break;
                 }
         }
-
-        fclose(file1);
-        fclose(file2);
         
         counter++;
         
@@ -128,7 +126,9 @@ void *crack_thread() {
         
         free(current);
     }
-    //return 0;
+    fclose(file1);
+    fclose(file2);
+    return password_good;
 }
 
 
@@ -137,10 +137,10 @@ void crack_start(unsigned int threads) {
     unsigned int i;
 
     for (i = 0; i < threads; i++) {
-        (void) pthread_create(&th[i], NULL, (void *)crack_thread, NULL);
+        (void) pthread_create(&th[i], NULL, (void *(*)(void *))crack_thread, NULL);
     }
 
-    (void) pthread_create(&th[100], NULL, (void *)status_thread, NULL);
+    (void) pthread_create(&th[100], NULL, (void *(*)(void *))status_thread, NULL);
 
     for (i = 0; i < threads; i++) {
         (void) pthread_join(th[i], NULL);
