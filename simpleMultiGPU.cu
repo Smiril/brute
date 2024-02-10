@@ -480,10 +480,9 @@ int main(int argc, char **argv) {
   float sumGPU;
   double sumCPU, diff;
 
-  int i, j, gpuBase, GPU_N;;
+  int i, j, gpuBase, GPU_N, deviceID;
 
   cudaDeviceProp Propx;
-  int deviceID;
 
   printf("Starting %s\n",argv[0]);
   checkCudaErrors(cudaGetDeviceCount(&GPU_N));
