@@ -502,12 +502,15 @@ if (argc < 2) {
                     if (threads > 100) {
                         printf("INFO: number of threads adjusted to 12\n");
                         threads = 12;
-                    }
+                    } else {
+                    printf("ERROR: missing parameter for option: --threads!%s","\n");
+                    help = 1;
+                }
                 } else if (strcmp(argv[i],"--hash") == 0) {
                 if ((i + 1) < argc) {
                     sscanf(argv[++i], "%s", &hash);
                 } else {
-                    printf("ERROR: missing parameter for option: --threads!%s","\n");
+                    printf("ERROR: missing parameter for option: --hash!%s","\n");
                     help = 1;
                 }
             } else {
