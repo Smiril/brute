@@ -54,7 +54,7 @@
 #include <helper_functions.h>
 #include <helper_cuda.h>
 
-#if defined(__CUDA_ARCH__)
+#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ < 200)
 #define printf(f, ...) ((void)(f, __VA_ARGS__),0)
 #endif
 
