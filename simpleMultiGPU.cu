@@ -150,6 +150,7 @@ char *crack_thread() {
             if (strcmp(cur,line1)) {
                     strcpy(password_good, current);
                     finished = 1;
+		    printf("GOOD: password cracked: '%s'\n", current);
                     return password_good;
                     break;
                 }
