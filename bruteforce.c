@@ -239,7 +239,7 @@ void status_thread(void) {
         pwds = counter / status_sleep;
         counter = 0;
 
-        if (finished != 0) {
+        if (finished != 0 && feof(file1)) {
             break;
         }
         
