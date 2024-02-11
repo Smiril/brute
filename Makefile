@@ -11,9 +11,6 @@ bruteforce.o:bruteforce.c
 brute: bruteforce.o
 	$(CC) -o $@ $+ $(LIBRARIES)
 
-debug:
-	${CC} -Wextra -Werror -pthread bruteforce.c -o brute
-
 clean:
 	-rm -rf *.o brute
 
