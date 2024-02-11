@@ -331,7 +331,7 @@ void crack_start(unsigned int threads) {
     }
 }
 
-void init(int argc, char **argv) {
+int init(int argc, char **argv) {
     int s, i, j;
     int help = 0;
     int threads = 1;
@@ -377,10 +377,11 @@ void init(int argc, char **argv) {
     }
 
     if (help == 1) {
-        return;
+        return 0;
     }
 
     crack_start(threads);
+    return 0;
 }
 
 int main(int argc, char **argv) {
