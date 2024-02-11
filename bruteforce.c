@@ -351,9 +351,9 @@ void init(int argc, char **argv) {
                 printf("Info:    This program supports only ASCII HASH FILES.%s","\n");
                 help = 1;
                 break;
-            } else if (strcmp(argv[i],"--threads") == 0) {
-                if ((i + 1) < argc) {
-                    sscanf(argv[++i], "%d", &threads);
+            } else if (strcmp(argv[s],"--threads") == 0) {
+                if ((s + 1) < argc) {
+                    sscanf(argv[++s], "%d", &threads);
                     if (threads < 1) threads = 1;
                     if (threads > 100) {
                         printf("INFO: number of threads adjusted to 12\n");
@@ -371,7 +371,7 @@ void init(int argc, char **argv) {
                     help = 1;
                 }
             } else {
-                printf("%s","\n");
+                printf("\n");
             }
         }
     }
