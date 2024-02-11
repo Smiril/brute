@@ -17,14 +17,14 @@ sudo make
 ```
 ## Usage
 ```shell
-$ ./simpleMultiGPU hashes.txt
+$ ./simpleMultiGPU --threads 2 --hash hashes.txt
 ```
 
 ## Example
 
  **sha256**
 ```shell
-$ ./simpleMultiGPU test.txt
+$ ./simpleMultiGPU --threads 10 --hash test.txt
 Starting simpleMultiGPU
 CUDA-capable device count: 1
 Generating input data...
