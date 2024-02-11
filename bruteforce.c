@@ -37,6 +37,7 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <time.h>
 #define MAX_LINE_LENGTH 42
 #define PWD_LEN 40
 FILE *file1;
@@ -385,8 +386,14 @@ void init(int argc, char **argv) {
 int main(int argc, char **argv) {
     // Print author
     printf("shaCrack! 0.1 by Smiril (sonar@gmx.com)\n\n");
+    clock_t start, finish;
+    double  laufzeit;
 
+    start = clock();
     init(argc,argv);
-    
+    finish = clock();
+
+    laufzeit = (double)(finish - start) / CLOCKS_PER_SEC;
+    printf( "%2.5f Sekunden\n", laufzeit );
     return 0;
 }
