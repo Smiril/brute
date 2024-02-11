@@ -661,7 +661,7 @@ int main(int argc, char **argv) {
   // start the timer
   sdkStartTimer(&timerc);
   // Compute on Host CPU
-  printf("Computing with Host CPU...\n%s","\n");
+  printf("Computing with Host CPU...%s","\n");
 
   sumCPU = 0;
 
