@@ -47,7 +47,7 @@ char pwd[sizeof(char)*(PWD_LEN + 1)];
 #include "bruteforce.h"
 char *password_good;  //this changed only once, when we found the good passord
 char *password; //this contains the actual password
-char hfile[255];    //the hashes file name
+char *hfile;    //the hashes file name
 long counter = 0;    //this couning probed passwords
 int finished = 0;
 int flag = 0;
@@ -332,7 +332,7 @@ void crack_start(unsigned int threads) {
 }
 
 void init(int argc, char **argv) {
-    int i, j;
+    int s, i, j;
     int help = 0;
     int threads = 1;
 
@@ -365,7 +365,7 @@ void init(int argc, char **argv) {
                 }
             } else if (strcmp(argv[s],"--hash") == 0) {
                 if ((s + 1) < argc) {
-                    sscanf(argv[++s], "%s", &hfile);
+                    sscanf(argv[++s], "%s", hfile);
                 } else {
                     printf("ERROR: missing parameter for option: --hash!%s","\n");
                     help = 1;
