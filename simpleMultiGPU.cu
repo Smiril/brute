@@ -398,7 +398,7 @@ void crack_thread(void) {
             if (strcmp(hashed_password,line1) == 0) {
                     strcpy(password_good, current);
                     finished = 1;
-		    printf("GOOD: password cracked: '%s'\n", password_good);
+		    printf("GOOD: password %s cracked: '%s'\n", hashed_password, password_good);
 		    free((void *)password_good);
                     break;
                 }
