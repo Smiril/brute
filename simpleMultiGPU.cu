@@ -497,11 +497,13 @@ int main(int argc, char **argv) {
                     if (threads > 100) {
                         printf("INFO: number of threads adjusted to 12\n");
                         threads = 12;
-                    } else {
-                    printf("ERROR: missing parameter for option: --threads %s","\n");
+                    } 
+		} else {
+                    printf("ERROR: missing parameter for option: --threads! %s","\n");
                     help = 1;
-                }
-                } else if (strcmp(argv[s],"--hash") == 0) {
+        	}
+		
+           } else if (strcmp(argv[s],"--hash") == 0) {
                 if ((s + 1) < argc) {
                     sscanf(argv[++s], "%s", &hash);
                 } else {
@@ -517,7 +519,7 @@ int main(int argc, char **argv) {
     if (help == 1) {
         return;
     }
-}
+
   // Solver config
   TGPUplan plan[MAX_GPU_COUNT];
 
