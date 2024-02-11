@@ -3,10 +3,10 @@ PREFIX=/usr/local
 DOCDIR=${PREFIX}/share
 
 all:
-	${CC} -pthread bruteforce.c -O2 -o brute
+	${CC} -pthread bruteforce.c -o brute
 
 debug:
-	${CC} -Wextra -Werror -pthread bruteforce.c -O2 -o brute
+	${CC} -Wextra -Werror -pthread bruteforce.c -o brute
 
 clean:
 	-rm -rf *.o brute
