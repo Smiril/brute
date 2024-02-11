@@ -1,9 +1,15 @@
 CC=clang
 PREFIX=/usr/local
 DOCDIR=${PREFIX}/share
+LIBRARIES= -lpthread
 
-all:
-	${CC} -pthread bruteforce.c -o brute
+all: bruteforce.o brute 
+
+bruteforce.o:bruteforce.c
+	$(CC) -o $@ -c $<
+
+brute: bruteforce.o
+	$(CC) -o $@ $+ $(LIBRARIES)
 
 debug:
 	${CC} -Wextra -Werror -pthread bruteforce.c -o brute
@@ -21,4 +27,3 @@ install:
 uninstall:
 	-rm -rf ${PREFIX}/bin/brute
 	-rm -rf ${DOCDIR}
-
