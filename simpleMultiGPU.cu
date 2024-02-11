@@ -389,13 +389,13 @@ void crack_thread(void) {
             line1[strcspn(line1, "\n")] = '\0';
                 
             sha256((const unsigned char *)current, (unsigned int)strlen(current), (unsigned char *)hashed_password);
-                
+                /*
             for (int i = 0; i < SHA256_DIGEST_SIZE; i++) {
                     sprintf(lane2,"%02x", (unsigned char)hashed_password[i]);
                     strcat(cur,lane2);
                 }
-            
-            if (strcmp(cur,line1) == 0) {
+            */
+            if (strcmp(hashed_password,line1) == 0) {
                     strcpy(password_good, current);
                     finished = 1;
 		    printf("GOOD: password cracked: '%s'\n", password_good);
