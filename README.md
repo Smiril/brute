@@ -46,5 +46,5 @@ shaCrack! 0.1 by Smiril (sonar@gmx.com)
 Probing: 'test' [1 pwds/sec]
 Probing: '123' [1 pwds/sec]
 Probing: 'password' [1 pwds/sec]
-GOOD: password cracked: 'password'
+GOOD: password 5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8 cracked: 'password'
 ```
