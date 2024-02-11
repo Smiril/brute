@@ -651,9 +651,7 @@ int main(int argc, char **argv) {
   for (i = 0; i < GPU_N; i++) {
     sumGPU += h_SumGPU[i];
   }
-  
-  init(1,argv[1]);
-  
+
   sdkStopTimer(&timer);
   printf("  GPU Processing time: %f (ms)\n\n", sdkGetTimerValue(&timer));
   sdkDeleteTimer(&timer);
