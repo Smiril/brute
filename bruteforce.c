@@ -344,11 +344,11 @@ void init(int argc, char **argv) {
         for (s = 1; s < argc; s++) {
             if (strcmp(argv[s],"--help") == 0) {
                 printf("Usage:   %s  --threads [NUM] --hash [hashes.ext]\n\n",argv[0]);
-                printf("Options: --help: show this screen.%s","\n");
-                printf("         --threads: you can specify how many threads%s","\n");
-                printf("                    will be run, maximum 100 (default: 12)\n%s","\n");
-		printf("         --hash: you can specify hash file%s","\n");
-                printf("Info:    This program supports only ASCII HASH FILES.%s","\n");
+                printf("Options: --help: show this screen.\n");
+                printf("         --threads: you can specify how many threads\n");
+                printf("                    will be run, maximum 100 (default: 12)\n");
+		printf("         --hash: you can specify hash file\n");
+                printf("Info:    This program supports only ASCII HASH FILES.\n");
                 help = 1;
                 break;
             } else if (strcmp(argv[s],"--threads") == 0) {
