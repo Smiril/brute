@@ -394,6 +394,6 @@ int main(int argc, char **argv) {
     finish = clock();
 
     laufzeit = (double)(finish - start) / CLOCKS_PER_SEC;
-    printf( "%2.5f Sekunden\n", laufzeit );
+    printf("%2.5f Sekunden\n", laufzeit);
     return 0;
 }
