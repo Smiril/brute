@@ -27,7 +27,7 @@ $ ./simpleMultiGPU --threads 2 --hash hashes.txt
 $ ./simpleMultiGPU --threads 1 --hash test.txt
 shaCrack! 0.2 by Smiril (sonar@gmx.com)
 
-Starting brutecuda
+Starting ./simpleMultiGPU
 CUDA-capable device count: 1
 Generating input data...
 
