@@ -395,5 +395,5 @@ int main(int argc, char **argv) {
 
     laufzeit = (double)(finish - start) / CLOCKS_PER_SEC;
     printf("  CPU Processing time: %2.6f (sec)\n\n", laufzeit);
-    return 0;
+    return EXIT_SUCCESS;
 }
