@@ -360,14 +360,14 @@ void init(int argc, char **argv) {
                         threads = 12;
                     }
                 } else {
-                    printf("ERROR: missing parameter for option: --threads!\n");
+                    printf("ERROR: missing parameter for option: --threads\n");
                     help = 1;
                 }
             } else if (strcmp(argv[s],"--hash") == 0) {
                 if ((s + 1) < argc) {
                     sscanf(argv[++s], "%s", hfile);
                 } else {
-                    printf("ERROR: missing parameter for option: --hash!%s","\n");
+                    printf("ERROR: missing parameter for option: --hash\n");
                     help = 1;
                 }
             } else {
