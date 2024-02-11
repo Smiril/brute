@@ -7,7 +7,7 @@ brute - port for CUDA (works on Linux)
 
 Originally source code by Copyright (C) 2024 Smiril - sonar@gmx.com
 
-Parts Copyright (C) by NVIDIA (see header)
+Parts Copyright (C) by Other (see header)
 
 
 ## Compile
