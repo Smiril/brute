@@ -331,7 +331,13 @@ void crack_start(unsigned int threads) {
     }
 }
 
-int init(int argc, char **argv) {
+int main(int argc, char **argv) {
+    // Print author
+    printf("shaCrack! 0.1 by Smiril (sonar@gmx.com)\n\n");
+    clock_t start, finish;
+    double  laufzeit;
+
+    start = clock();
     int s, i, j;
     int help = 0;
     int threads = 1;
@@ -381,20 +387,10 @@ int init(int argc, char **argv) {
     }
 
     crack_start(threads);
-    return 0;
-}
-
-int main(int argc, char **argv) {
-    // Print author
-    printf("shaCrack! 0.1 by Smiril (sonar@gmx.com)\n\n");
-    clock_t start, finish;
-    double  laufzeit;
-
-    start = clock();
-    init(argc,argv);
     finish = clock();
 
     laufzeit = (double)(finish - start) / CLOCKS_PER_SEC;
     printf("  CPU Processing time: %2.6f (sec)\n\n", laufzeit);
     return EXIT_SUCCESS;
 }
+
