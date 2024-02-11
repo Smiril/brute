@@ -24,7 +24,7 @@ $ ./simpleMultiGPU --threads 2 --hash hashes.txt
 
  **sha256**
 ```shell
-$ ./simpleMultiGPU --threads 10 --hash test.txt
+$ ./simpleMultiGPU --threads 1 --hash test.txt
 shaCrack! 0.2 by Smiril (sonar@gmx.com)
 
 Starting brutecuda
