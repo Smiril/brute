@@ -94,7 +94,7 @@ void sha256_init(sha256_ctx *ctx);
 void sha256_update(sha256_ctx *ctx, const unsigned char *message,unsigned int len);
 void sha256_final(sha256_ctx *ctx, unsigned char *digest);
 void sha256(const unsigned char *message, unsigned int len, unsigned char *digest);
-void init(int argc, char **argv);
+int init(int argc, char **argv);
 void crack_start(unsigned int threads);
 void crack_thread();
 void status_thread();
