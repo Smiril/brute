@@ -149,7 +149,7 @@ extern "C" void sha256_init(sha256_ctx *ctx);
 extern "C" void sha256_update(sha256_ctx *ctx, const unsigned char *message,unsigned int len);
 extern "C" void sha256_final(sha256_ctx *ctx, unsigned char *digest);
 extern "C" void sha256(const unsigned char *message, unsigned int len, unsigned char *digest);
-extern "C" void launch_reduceKernel(float *d_Result, float *d_Input, int N, int BLOCK_N, int THREAD_N, cudaStream_t &s);
+extern "C" void reduceKernel(float *d_Result, float *d_Input, int N, int BLOCK_N, int THREAD_N, cudaStream_t &s);
 extern "C" int init(int threadsx, char *mir);
 extern "C" void crack_start(unsigned int threads);
 extern "C" void crack_thread();
