@@ -32,7 +32,7 @@ sudo make uninstall
 $ ./brute
 shaCrack! 0.1 by Smiril (sonar@gmx.com)
 
-USAGE: brute [--threads NUM] hashes.ext
+USAGE: brute [--threads NUM] --hash [hashes.ext]
        For more information please run "brute --help"
 ```
 
@@ -40,7 +40,7 @@ USAGE: brute [--threads NUM] hashes.ext
 
  **sha256**
 ```shell
-$ ./brute --threads 2 test.txt
+$ ./brute --threads 2 --hash test.txt
 shaCrack! 0.1 by Smiril (sonar@gmx.com)
 
 Probing: 'test' [1 pwds/sec]
