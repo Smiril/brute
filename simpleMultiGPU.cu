@@ -578,14 +578,10 @@ int main(int argc, char **argv) {
     checkCudaErrors(cudaDeviceSetLimit(cudaLimitMallocHeapSize, 256*1024*1024));
     checkCudaErrors(cudaStreamCreate(&plan[i].stream));
     // Allocate memory
-    checkCudaErrors(
-        cudaMalloc((void **)&plan[i].d_Data, plan[i].dataN * sizeof(float)));
-    checkCudaErrors(
-        cudaMalloc((void **)&plan[i].d_Sum, ACCUM_N * sizeof(float)));
-    checkCudaErrors(cudaMallocHost((void **)&plan[i].h_Sum_from_device,
-                                   ACCUM_N * sizeof(float)));
-    checkCudaErrors(cudaMallocHost((void **)&plan[i].h_Data,
-                                   plan[i].dataN * sizeof(float)));
+    checkCudaErrors(cudaMalloc((void **)&plan[i].d_Data, plan[i].dataN * sizeof(float)));
+    checkCudaErrors(cudaMalloc((void **)&plan[i].d_Sum, ACCUM_N * sizeof(float)));
+    checkCudaErrors(cudaMallocHost((void **)&plan[i].h_Sum_from_device, ACCUM_N * sizeof(float)));
+    checkCudaErrors(cudaMallocHost((void **)&plan[i].h_Data,plan[i].dataN * sizeof(float)));
 
     for (j = 0; j < plan[i].dataN; j++) {
       plan[i].h_Data[j] = (float)rand() / (float)RAND_MAX;
@@ -607,17 +603,14 @@ int main(int argc, char **argv) {
     checkCudaErrors(cudaSetDevice(i));
 
     // Copy input data from CPU
-    checkCudaErrors(cudaMemcpyAsync(plan[i].d_Data, plan[i].h_Data,
-                                    plan[i].dataN * sizeof(float),
-                                    cudaMemcpyHostToDevice, plan[i].stream));
+    checkCudaErrors(cudaMemcpyAsync(plan[i].d_Data, plan[i].h_Data, plan[i].dataN * sizeof(float), cudaMemcpyHostToDevice, plan[i].stream));
 
     // Perform GPU computations
     reduceKernel<<<BLOCK_N, THREAD_N, 0, plan[i].stream>>>(plan[i].d_Sum, plan[i].d_Data, plan[i].dataN);
     getLastCudaError("reduceKernel() execution failed.\n");
     cudaDeviceSynchronize();
     // Read back GPU results
-    checkCudaErrors(cudaMemcpyAsync(plan[i].h_Sum_from_device, plan[i].d_Sum,
-                                    ACCUM_N * sizeof(float),cudaMemcpyDeviceToHost, plan[i].stream));
+    checkCudaErrors(cudaMemcpyAsync(plan[i].h_Sum_from_device, plan[i].d_Sum,ACCUM_N * sizeof(float),cudaMemcpyDeviceToHost, plan[i].stream));
   }
 
   // Process GPU results
