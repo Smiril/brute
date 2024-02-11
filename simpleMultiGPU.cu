@@ -373,9 +373,9 @@ void status_thread(void) {
 void crack_thread(void) {
     char *current = (char*)malloc(MAX_LINE_LENGTH);
     char line1[MAX_LINE_LENGTH];
-    char cur[SHA256_DIGEST_SIZE];
-    char lane2[SHA256_DIGEST_SIZE];
-    char hashed_password[SHA256_DIGEST_SIZE * 2 + 1]; // Each byte of hash produces two characters in hex
+    //char cur[SHA256_DIGEST_SIZE];
+    //char lane2[SHA256_DIGEST_SIZE];
+    char hashed_password[SHA256_DIGEST_SIZE]; // Each byte of hash produces two characters in hex
     file2 = fopen("/usr/local/share/rockyou.txt", "r");
     pthread_mutex_t mutex;
     pthread_mutex_lock(&mutex);
