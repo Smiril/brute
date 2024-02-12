@@ -231,10 +231,10 @@ void sha256(const unsigned char *message, unsigned int len, unsigned char *diges
 char *nextpass() {
     char line[MAX_LINE_LENGTH * sizeof(char*)];
     
-    if (fgets(line, MAX_LINE_LENGTH, file2) != NULL) {
+    while(fgets(line, MAX_LINE_LENGTH, file2) != NULL) {
         line[strcspn(line, "\n")] = '\0';
         strcpy(pwd, line);
-    return pwd;
+        return pwd;
     }
 	return 0;
 }
@@ -313,6 +313,8 @@ void crack_thread(void) {
 void crack_start(unsigned int threads) {
     pthread_t th[101];
     unsigned int i;
+    //sem_init(&mutex,0,1);
+    //sem_init(&barrier,0,0);
 
     for (i = 0; i < threads; i++) {
         (void) pthread_create(&th[i], NULL, (void *(*)(void *))crack_thread, NULL);
