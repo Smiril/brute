@@ -1,5 +1,5 @@
 /*
- * Last update: 11/02/2024
+ * Last update: 10/02/2024
  * Issue date:  10/02/2024
  *
  * Copyright (C) 2024, Smiril <sonar@gmx.com>
@@ -35,6 +35,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <semaphore.h>
 #include <stdint.h>
 #include <unistd.h>
 #include <time.h>
@@ -43,8 +44,13 @@
 FILE *file1;
 FILE *file2;
 char pwd[sizeof(char)*(PWD_LEN + 1)];
+sem_t mutex;
+sem_t barrier;
 
+int count;
+int n=1;
 #include "bruteforce.h"
+
 char *password_good;  //this changed only once, when we found the good passord
 char *password; //this contains the actual password
 char *hfile;    //the hashes file name
@@ -257,10 +263,16 @@ void crack_thread(void) {
     //char lane2[SHA256_DIGEST_SIZE];
     char hashed_password[SHA256_DIGEST_SIZE]; // Each byte of hash produces two characters in hex
     file2 = fopen("/usr/local/share/rockyou.txt", "r");
-    pthread_mutex_t mutex;
-    pthread_mutex_lock(&mutex);
     flag=1;
-	
+    sem_wait(&mutex);
+    count=count + 1;
+    sem_post(&mutex);
+
+    if(count==n)
+	sem_post(&barrier);
+    sem_wait(&barrier);
+    sem_post(&barrier);           // turnstile: a wait and a post occurs in  
+ 	
     while (flag == 1) {
         current = nextpass();
         file1 = fopen(hfile, "r");
@@ -293,7 +305,6 @@ void crack_thread(void) {
         
         free((void *)current);
     }
-    pthread_mutex_unlock (&mutex);
     fclose(file1);
     fclose(file2);
 }
@@ -303,10 +314,6 @@ void crack_start(unsigned int threads) {
     pthread_t th[101];
     unsigned int i;
 
-    pthread_barrier_init(&barr, NULL, threads);
-    int res = pthread_barrier_wait(&barr);
-    if(res == PTHREAD_BARRIER_SERIAL_THREAD) {
-    
     for (i = 0; i < threads; i++) {
         (void) pthread_create(&th[i], NULL, (void *(*)(void *))crack_thread, NULL);
     }
@@ -317,18 +324,7 @@ void crack_start(unsigned int threads) {
         (void) pthread_join(th[i], NULL);
     }
 
-    (void) pthread_join(th[100], NULL);
-    } else if(res != 0) {
-        perror("Threading");
-    } else {
-        (void) pthread_create(&th[100], NULL, (void *(*)(void *))crack_thread, NULL);
-
-        (void) pthread_create(&th[100], NULL, (void *(*)(void *))status_thread, NULL);
-
-        (void) pthread_join(th[100], NULL);
-
-        (void) pthread_join(th[100], NULL);
-    }
+    (void) pthread_join(th[100], NULL);   
 }
 
 int main(int argc, char **argv) {
@@ -340,9 +336,9 @@ int main(int argc, char **argv) {
     start = clock();
     int s, i, j;
     int help = 0;
-    int threads = 1;
+    int threads = 0;
 
-    if (argc == 1) {
+    if (argc < 2) {
         printf("USAGE: %s  --threads [NUM] --hash [hashes.ext]\n",argv[0]);
         printf("       For more information please run \"%s --help\"\n",argv[0]);
         help = 1;
@@ -384,9 +380,9 @@ int main(int argc, char **argv) {
 
     if (help == 1) {
         return EXIT_SUCCESS;
+    } else {
+    	crack_start(threads);
     }
-
-    crack_start(threads);
     finish = clock();
 
     laufzeit = (double)(finish - start) / CLOCKS_PER_SEC;
