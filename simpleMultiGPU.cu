@@ -355,7 +355,7 @@ char *nextpass() {
         line[strcspn(line, "\n")] = '\0';
         strcpy(pwd, line);
     }
-
+    fclose(file2);
     return pwd;
 }
 
