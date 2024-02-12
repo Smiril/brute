@@ -230,13 +230,15 @@ void sha256(const unsigned char *message, unsigned int len, unsigned char *diges
 
 char *nextpass() {
     char line[MAX_LINE_LENGTH * sizeof(char*)];
-    
+    file2 = fopen("/usr/local/share/brute/rockyou.txt", "r");
+	
     while(fgets(line, MAX_LINE_LENGTH, file2) != NULL) {
         line[strcspn(line, "\n")] = '\0';
         strcpy(pwd, line);
         return pwd;
     }
-	return 0;
+	fclose(file2);
+	return pwd;
 }
 
 void status_thread(void) {
@@ -262,7 +264,7 @@ void crack_thread(void) {
     //char cur[SHA256_DIGEST_SIZE];
     //char lane2[SHA256_DIGEST_SIZE];
     char hashed_password[SHA256_DIGEST_SIZE]; // Each byte of hash produces two characters in hex
-    file2 = fopen("/usr/local/share/brute/rockyou.txt", "r");
+	
     flag=1;
     sem_wait(&mutex);
     count=count + 1;
@@ -306,7 +308,6 @@ void crack_thread(void) {
         free((void *)current);
     }
     fclose(file1);
-    fclose(file2);
 }
 
 
