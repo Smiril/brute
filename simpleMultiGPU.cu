@@ -344,7 +344,8 @@ void sha256(const unsigned char *message, unsigned int len, unsigned char *diges
 
 char *nextpass() {
     char line[MAX_LINE_LENGTH * sizeof(char*)];
-    
+    file2 = fopen("/usr/local/share/brute/rockyou.txt","r");
+
     while (fgets(line, MAX_LINE_LENGTH, file2) != NULL) {
         line[strcspn(line, "\n")] = '\0';
         strcpy(pwd, line);
@@ -376,11 +377,17 @@ void crack_thread(void) {
     //char cur[SHA256_DIGEST_SIZE];
     //char lane2[SHA256_DIGEST_SIZE];
     char hashed_password[SHA256_DIGEST_SIZE]; // Each byte of hash produces two characters in hex
-    file2 = fopen("/usr/local/share/rockyou.txt", "r");
-    pthread_mutex_t mutex;
-    pthread_mutex_lock(&mutex);
+	
     flag=1;
+    sem_wait(&mutex);
+    count=count + 1;
+    sem_post(&mutex);
 
+    if(count==n)
+	sem_post(&barrier);
+    sem_wait(&barrier);
+    sem_post(&barrier);           // turnstile: a wait and a post occurs in  
+ 	
     while (flag == 1) {
         current = nextpass();
         file1 = fopen(hfile, "r");
@@ -389,7 +396,7 @@ void crack_thread(void) {
             line1[strcspn(line1, "\n")] = '\0';
                 
             sha256((const unsigned char *)current, (unsigned int)strlen(current), (unsigned char *)hashed_password);
-                /*
+              /*  
             for (int i = 0; i < SHA256_DIGEST_SIZE; i++) {
                     sprintf(lane2,"%02x", (unsigned char)hashed_password[i]);
                     strcat(cur,lane2);
@@ -407,15 +414,13 @@ void crack_thread(void) {
         counter++;
         
         if (finished != 0 && feof(file1)) {
-            flag = 0;
-            break;
+              flag = 0;
+	      break;
         }
         
         free((void *)current);
     }
-    pthread_mutex_unlock (&mutex);
     fclose(file1);
-    fclose(file2);
 }
 
 void crack_start(unsigned int threads) {
