@@ -431,11 +431,9 @@ void crack_thread(void) {
 void crack_start(unsigned int threads) {
     pthread_t th[101];
     unsigned int i;
+    //sem_init(&mutex,0,1);
+    //sem_init(&barrier,0,0);
 
-    pthread_barrier_init(&barr, NULL, threads);
-    int res = pthread_barrier_wait(&barr);
-    if(res == PTHREAD_BARRIER_SERIAL_THREAD) {
-    
     for (i = 0; i < threads; i++) {
         (void) pthread_create(&th[i], NULL, (void *(*)(void *))crack_thread, NULL);
     }
@@ -446,19 +444,7 @@ void crack_start(unsigned int threads) {
         (void) pthread_join(th[i], NULL);
     }
 
-    (void) pthread_join(th[100], NULL);
-
-    } else if(res != 0) {
-        perror("Threading");
-    } else {
-        (void) pthread_create(&th[1], NULL, (void *(*)(void *))crack_thread, NULL);
-
-        (void) pthread_create(&th[10], NULL, (void *(*)(void *))status_thread, NULL);
-
-        (void) pthread_join(th[1], NULL);
-
-        (void) pthread_join(th[10], NULL);
-       }
+    (void) pthread_join(th[100], NULL);   
 }
 
 int init(int threadsx, char *mir) {
