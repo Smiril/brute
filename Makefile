@@ -1,6 +1,6 @@
 CC=clang
 PREFIX=/usr/local
-DOCDIR=${PREFIX}/share
+DOCDIR=${PREFIX}/share/brute
 LIBRARIES= -lpthread
 
 all: bruteforce.o brute 
