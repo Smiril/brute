@@ -40,10 +40,10 @@
 #include <unistd.h>
 #include <time.h>
 #define MAX_LINE_LENGTH 42
-#define PWD_LEN 40
+#define PWD_LEN 42
 FILE *file1;
 FILE *file2;
-char pwd[sizeof(char)*(PWD_LEN + 1)];
+char pwd[MAX_LINE_LENGTH * sizeof(char*)];
 sem_t mutex;
 sem_t barrier;
 
@@ -51,8 +51,8 @@ int count;
 int n=1;
 #include "bruteforce.h"
 
-char *password_good;  //this changed only once, when we found the good passord
-char *password; //this contains the actual password
+char password_good[MAX_LINE_LENGTH * sizeof(char*)] = {'\0','\0'};  //this changed only once, when we found the good passord
+char password[MAX_LINE_LENGTH * sizeof(char*)] = {'\0','\0'}; //this contains the actual password
 char *hfile;    //the hashes file name
 long counter = 0;    //this couning probed passwords
 int finished = 0;
@@ -230,15 +230,16 @@ void sha256(const unsigned char *message, unsigned int len, unsigned char *diges
 
 char *nextpass() {
     char line[MAX_LINE_LENGTH * sizeof(char*)];
+    
     file2 = fopen("/usr/local/share/brute/rockyou.txt", "r");
 	
     while(fgets(line, MAX_LINE_LENGTH, file2) != NULL) {
         line[strcspn(line, "\n")] = '\0';
-        strcpy(pwd, line);
-        return pwd;
+        strcpy(password,line);
+        return password;
     }
-	fclose(file2);
-	return pwd;
+	
+	return password;
 }
 
 void status_thread(void) {
@@ -293,7 +294,7 @@ void crack_thread(void) {
                     strcpy(password_good, current);
                     finished = 1;
 		    printf("GOOD: password %s cracked: '%s'\n", hashed_password, password_good);
-		    free((void *)password_good);
+		    //free((void *)password_good);
                     break;
                 }
         }
@@ -308,6 +309,7 @@ void crack_thread(void) {
         free((void *)current);
     }
     fclose(file1);
+    fclose(file2);
 }
 
 
@@ -392,4 +394,3 @@ int main(int argc, char **argv) {
     printf("  CPU Processing time: %2.6f (sec)\n\n", laufzeit);
     return EXIT_SUCCESS;
 }
-
