@@ -359,7 +359,7 @@ char *nextpass() {
         line[strcspn(line, "\n")] = '\0';
 	sprintf(password,"%s",line);
         //strcpy(password, line);
-	return password;
+	//return password;
     }
 
     return password;
