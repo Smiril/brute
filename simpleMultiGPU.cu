@@ -174,10 +174,9 @@ __global__ static void __launch_bounds__(MY_KERNEL_MAX_THREADS, MY_KERNEL_MIN_BL
 char password_good[MAX_LINE_LENGTH * sizeof(char*)] = {'\0','\0'};  //this changed only once, when we found the good passord
 char password[MAX_LINE_LENGTH * sizeof(char*)] = {'\0','\0'}; //this contains the actual password
 char hfile[255];    //the hashes file name
-long counter = 0;    //this couning probed passwords
+long counter = 0;    //this counting probed passwords
 int finished = 0;
 int flag = 0;
-pthread_barrier_t barr;
 
 #define UNPACK32(x, str)                      \
 {                                             \
@@ -352,9 +351,14 @@ char *nextpass() {
     char line[MAX_LINE_LENGTH * sizeof(char*)];
     file2 = fopen("/usr/local/share/brute/rockyou.txt","r");
 
+    if(file2 == NULL) {
+	perror("Wordlist");
+	}
+
     while (fgets(line, MAX_LINE_LENGTH, file2) != NULL) {
         line[strcspn(line, "\n")] = '\0';
-        strcpy(password, line);
+	sprintf(password,"%s",line);
+        //strcpy(password, line);
 	return password;
     }
 
@@ -413,7 +417,7 @@ void crack_thread(void) {
                     strcpy(password_good, current);
                     finished = 1;
 		    printf("GOOD: password %s cracked: '%s'\n", hashed_password, password_good);
-		    free((void *)password_good);
+		    //free((void *)password_good);
                     break;
                 }
         }
