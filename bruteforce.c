@@ -53,11 +53,10 @@ int n=1;
 
 char password_good[MAX_LINE_LENGTH * sizeof(char*)] = {'\0','\0'};  //this changed only once, when we found the good passord
 char password[MAX_LINE_LENGTH * sizeof(char*)] = {'\0','\0'}; //this contains the actual password
-char *hfile;    //the hashes file name
-long counter = 0;    //this couning probed passwords
+char hfile[255];    //the hashes file name
+long counter = 0;    //this counting probed passwords
 int finished = 0;
 int flag = 0;
-pthread_barrier_t barr;
 
 #define UNPACK32(x, str)                      \
 {                                             \
@@ -232,26 +231,31 @@ char *nextpass() {
     char line[MAX_LINE_LENGTH * sizeof(char*)];
     
     file2 = fopen("/usr/local/share/brute/rockyou.txt", "r");
+
+    if(file2 == NULL) {
+	perror("Wordlist");
+	}
 	
     while(fgets(line, MAX_LINE_LENGTH, file2) != NULL) {
         line[strcspn(line, "\n")] = '\0';
-        strcpy(password,line);
+        sprintf(password,"%s",line);
+        //strcpy(password, line);
+	counter = counter + 1;
         return password;
     }
 	
 	return password;
 }
 
-void status_thread(void) {
+void status_thread() {
     int pwds;
 
     const short status_sleep = 1;
     while(1) {
         sleep(status_sleep);
         pwds = counter / status_sleep;
-        counter = 0;
 
-        if (finished != 0 && feof(file1)) {
+        if (finished != 0) {
             break;
         }
         
@@ -291,15 +295,15 @@ void crack_thread(void) {
                 }
             */
             if (strcmp(hashed_password,line1) == 0) {
-                    strcpy(password_good, current);
+                    sprintf(password_good,"%s", current);
                     finished = 1;
-		    printf("GOOD: password %s cracked: '%s'\n", hashed_password, password_good);
+		    printf("GOOD: \npassword %s \ncracked: '%s'\n", hashed_password, password_good);
 		    //free((void *)password_good);
                     break;
                 }
         }
         
-        counter++;
+        //counter++;
         
         if (finished != 0 && feof(file1)) {
               flag = 0;
