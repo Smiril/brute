@@ -107,6 +107,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <semaphore.h>
 #include <stdint.h>
 #include <unistd.h>
 #define MAX_LINE_LENGTH 42
@@ -130,7 +131,7 @@
 
 #include "simpleMultiGPU.h"
 
-#define PWD_LEN 40
+#define PWD_LEN 42
 FILE *file1;
 FILE *file2;
 char pwd[sizeof(char)*(PWD_LEN + 1)];
@@ -170,8 +171,8 @@ __global__ static void __launch_bounds__(MY_KERNEL_MAX_THREADS, MY_KERNEL_MIN_BL
   d_Result[tid] = sum;
 }
 
-char *password_good;  //this changed only once, when we found the good passord
-char *password; //this contains the actual password
+char password_good[MAX_LINE_LENGTH * sizeof(char*)] = {'\0','\0'};  //this changed only once, when we found the good passord
+char password[MAX_LINE_LENGTH * sizeof(char*)] = {'\0','\0'}; //this contains the actual password
 char hfile[255];    //the hashes file name
 long counter = 0;    //this couning probed passwords
 int finished = 0;
@@ -353,10 +354,11 @@ char *nextpass() {
 
     while (fgets(line, MAX_LINE_LENGTH, file2) != NULL) {
         line[strcspn(line, "\n")] = '\0';
-        strcpy(pwd, line);
+        strcpy(password, line);
+	return password;
     }
-    fclose(file2);
-    return pwd;
+
+    return password;
 }
 
 void status_thread(void) {
@@ -377,8 +379,8 @@ void status_thread(void) {
 }
 
 void crack_thread(void) {
-    char *current = (char*)malloc(MAX_LINE_LENGTH);
-    char line1[MAX_LINE_LENGTH];
+    char *current = (char*)malloc(MAX_LINE_LENGTH * sizeof(char*));
+    char line1[MAX_LINE_LENGTH * sizeof(char*)];
     //char cur[SHA256_DIGEST_SIZE];
     //char lane2[SHA256_DIGEST_SIZE];
     char hashed_password[SHA256_DIGEST_SIZE]; // Each byte of hash produces two characters in hex
@@ -426,6 +428,7 @@ void crack_thread(void) {
         free((void *)current);
     }
     fclose(file1);
+    fclose(file2);
 }
 
 void crack_start(unsigned int threads) {
