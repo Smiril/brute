@@ -241,7 +241,7 @@ char *nextpass() {
         sprintf(password,"%s",line);
         //strcpy(password, line);
 	counter = counter + 1;
-        return password;
+        //return password;
     }
 	
 	return password;
